@@ -7,8 +7,9 @@
   const status = document.getElementById("gb-status");
 
   if (!cfg.SUPABASE_URL || !cfg.SUPABASE_KEY) {
-    status.textContent = "Guestbook is not connected yet.";
-    form.querySelector("button").disabled = true;
+    // No database configured: hide the guestbook and its links.
+    document.getElementById("guestbook").hidden = true;
+    document.querySelectorAll('a[href="#guestbook"]').forEach((a) => (a.hidden = true));
     return;
   }
 
