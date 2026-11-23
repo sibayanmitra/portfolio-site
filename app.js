@@ -1,6 +1,6 @@
 // A field of short segments drifting along a smooth noise field. Near the
-// pointer they rotate into one shared direction, like a steering vector,
-// and grow into arrows.
+// pointer they turn to face it and become arrows. On load, one sweep aligns
+// them to a single shared direction, like a steering vector.
 (function () {
   // theme toggle: follows the system until the visitor picks one
   const root = document.documentElement;
@@ -103,21 +103,23 @@
     for (const c of cells) {
       const dx = c.x - px, dy = c.y - py;
       let k = Math.exp(-(dx * dx + dy * dy) / (r2 * 0.5));
+      let aim = Math.atan2(-dy, -dx); // point at the cursor
       if (front !== null) {
         const f = (c.x - front + (c.y - h / 2) * 0.35) / (w * 0.12);
-        k = Math.max(k, Math.exp(-f * f) * sweepK);
+        const ks = Math.exp(-f * f) * sweepK;
+        if (ks > k) { k = ks; aim = STEER; }
       }
-      const target = c.base + dAngle(c.base, STEER) * k;
+      const target = c.base + dAngle(c.base, aim) * k;
       const da = dAngle(c.a, target);
       const dt = k - c.t;
       if (Math.abs(da) > 0.002 || Math.abs(dt) > 0.002) moving = true;
       c.a += da * 0.12;
       c.t += dt * 0.12;
 
-      const len = 5 + c.t * 8;
+      const len = 5 + c.t * 1.5;
       const ux = Math.cos(c.a), uy = Math.sin(c.a);
       const cx = ux * len, cy = uy * len;
-      ctx.lineWidth = 1 + c.t * 0.8;
+      ctx.lineWidth = 1 + c.t * 0.3;
       // ink fades out as the accent fades in; both quieter behind the name
       const inkA = 0.16 * (1 - c.t) * c.q, accA = 0.85 * c.t * (0.4 + 0.6 * c.q);
       for (const [style, alpha] of [[col.ink, inkA], [col.accent, accA]]) {
@@ -129,7 +131,7 @@
         ctx.lineTo(c.x + cx, c.y + cy);
         // arrowhead grows in as the segment is pulled into the direction
         if (style === col.accent && c.t > 0.2) {
-          const hl = 2 + (c.t - 0.2) * 6, sp = 0.5;
+          const hl = 2 + (c.t - 0.2) * 1.5, sp = 0.55;
           const tx = c.x + cx, ty = c.y + cy;
           const ca = Math.cos(sp), sa = Math.sin(sp);
           ctx.moveTo(tx - hl * (ux * ca - uy * sa), ty - hl * (uy * ca + ux * sa));
