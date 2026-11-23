@@ -4,138 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sibayan Mitra</title>
-  <meta name="description" content="Sibayan Mitra — research on interpretability, evaluation and safety of large language models.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232f5d50'/><text x='16' y='22' font-size='16' font-family='Georgia,serif' text-anchor='middle' fill='white'>SM</text></svg>">
+  <meta name="description" content="Sibayan Mitra">
+  <meta name="theme-color" content="#ECEEF1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0D1220" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231B2333'/><path d='M9 21 L23 11' stroke='%238E9BFF' stroke-width='2.4' stroke-linecap='round'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="#top">Sibayan Mitra</a>
-    <nav>
-      <a href="#research">Research</a>
-      <a href="#tools">Tools</a>
-      <a href="#writing">Writing</a>
-      <a href="#guestbook">Guestbook</a>
+  <canvas id="field" aria-hidden="true"></canvas>
+
+  <button id="theme" class="theme" type="button" aria-label="Switch theme">
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M10 2 a8 8 0 0 1 0 16 z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <main class="plate">
+    <h1 class="name">Sibayan Mitra</h1>
+    <nav class="links" aria-label="Elsewhere">
+      <a href="cv.pdf">CV</a>
+      <a href="https://github.com/sibayanmitra">GitHub</a>
+      <a href="https://www.linkedin.com/in/sibayan-mitra-078863266">LinkedIn</a>
     </nav>
-  </header>
-
-  <main id="top">
-    <section class="hero">
-      <p class="eyebrow">LLM interpretability · evaluation · safety</p>
-      <h1>I study what language models represent, and when that changes what they do.</h1>
-      <p class="lede">
-        Most of my work sits between mechanistic interpretability and behavioural evaluation:
-        finding directions and circuits inside a model, then testing whether they actually
-        drive behaviour in agentic and multi-turn settings.
-      </p>
-      <p class="links">
-        <a class="button" href="https://github.com/sibayanmitra">GitHub</a>
-        <a class="button ghost" href="#guestbook">Leave a note</a>
-      </p>
-    </section>
-
-    <section id="research">
-      <h2>Research</h2>
-      <div class="grid">
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/value-leakage-forensics">The Number, Not the Values</a></h3>
-          <p>A forensic re-test of the Donation Bet: holding a numeral fixed and moving only the question's scope flips whether the model copies it, 19/20 to 0/20.</p>
-          <span class="tag">Evaluation · honesty</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/bystander-agents">Bystander Effect in Multi-Agent Pipelines</a></h3>
-          <p>Does a subagent apply weaker safety thresholds when it believes other agents will also review the work, and does it scale with the number of co-reviewers?</p>
-          <span class="tag">Agents · safety</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/agentic-tool-error-steering">Tool-Error Next-Action Direction</a></h3>
-          <p>A pre-registered study of a direction in agentic LLMs that is induced by tool errors and steers what the agent does next.</p>
-          <span class="tag">Steering · agents</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/emotion-refusal-interp">Geometry of Safety × Affect</a></h3>
-          <p>How refusal and user-emotion representations sit relative to each other in the residual stream, and whether that geometry has causal effects on safety behaviour.</p>
-          <span class="tag">Representation geometry</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/user-representation-interp">User-Attribute Representations</a></h3>
-          <p>Do multi-turn LLMs build causal internal models of a user's age, education and background, or are those probes only correlational?</p>
-          <span class="tag">Probing · causality</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/compression-floor">Compression Floor</a></h3>
-          <p>The gap between an LLM's in-context cross-entropy and the true entropy rate of sources whose entropy is known analytically.</p>
-          <span class="tag">Information theory</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/code-llm-thinks-python">Mean-Pooled Cosine Is Not Length-Invariant</a></h3>
-          <p>A metric audit of cross-representation comparison, prompted by asking whether code models route through Python internally.</p>
-          <span class="tag">Methodology</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/llm-as-computer">LLM as Computer</a></h3>
-          <p>Hybrid transformer/interpreter architectures for exact computation.</p>
-          <span class="tag">Architecture</span>
-        </article>
-        <article class="card">
-          <h3><a href="https://github.com/sibayanmitra/ijepa-renyi-ib">I-JEPA with a Rényi Bottleneck</a></h3>
-          <p>I-JEPA pretraining with a matrix-based Rényi information-bottleneck objective.</p>
-          <span class="tag">Self-supervised learning</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="tools">
-      <h2>Tools</h2>
-      <ul class="list">
-        <li><a href="https://github.com/sibayanmitra/caisc-research">caisc-research</a><span>Research idea generation and screening pipeline.</span></li>
-        <li><a href="https://github.com/sibayanmitra/llm-eval-harness">llm-eval-harness</a><span>An OpenAI-compatible cost-routing proxy over OpenRouter.</span></li>
-        <li><a href="https://github.com/sibayanmitra/karyaniti">karyaniti</a><span>Automation tool for legal research.</span></li>
-        <li><a href="https://github.com/sibayanmitra/audiobook-pipeline">audiobook-pipeline</a><span>PDF → Markdown → TTS audiobook conversion.</span></li>
-      </ul>
-    </section>
-
-    <section id="writing">
-      <h2>Writing &amp; reading</h2>
-      <ul class="list">
-        <li><a href="https://github.com/sibayanmitra/writing-examples">writing-examples</a><span>Short pieces on eval awareness, probes and model personas.</span></li>
-        <li><a href="https://github.com/sibayanmitra/reading-log">reading-log</a><span>Books, podcasts and videos I've gone through or want to.</span></li>
-        <li><a href="https://github.com/sibayanmitra/chemistry-and-ml">chemistry-and-ml</a><span>Notes on chemistry and machine learning.</span></li>
-      </ul>
-    </section>
-
-    <section id="guestbook">
-      <h2>Guestbook</h2>
-      <p class="muted">Say hi, suggest a paper, or tell me what I got wrong. Notes are public.</p>
-      <form id="gb-form" class="gb-form" autocomplete="off">
-        <label>Name
-          <input name="name" maxlength="60" required>
-        </label>
-        <label>Message
-          <textarea name="message" maxlength="500" rows="3" required></textarea>
-        </label>
-        <!-- honeypot: humans never see or fill this -->
-        <label class="hp" aria-hidden="true">Website
-          <input name="website" tabindex="-1">
-        </label>
-        <div class="gb-actions">
-          <button class="button" type="submit">Sign</button>
-          <span id="gb-status" class="muted" role="status"></span>
-        </div>
-      </form>
-      <ol id="gb-list" class="gb-list"></ol>
-    </section>
   </main>
 
-  <footer class="site-footer">
-    <span>© <span id="year"></span> Sibayan Mitra</span>
-    <a href="https://github.com/sibayanmitra/portfolio-site">Source</a>
-  </footer>
-
-  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
