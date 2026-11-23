@@ -12,9 +12,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
   <canvas id="field" aria-hidden="true"></canvas>
+
+  <button id="theme" class="theme" type="button" aria-label="Switch theme">
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M10 2 a8 8 0 0 1 0 16 z" fill="currentColor"/>
+    </svg>
+  </button>
 
   <main class="plate">
     <h1 class="name">Sibayan Mitra</h1>

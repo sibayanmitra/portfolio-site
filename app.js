@@ -1,13 +1,32 @@
 // A field of short segments drifting along a smooth noise field. Near the
-// pointer they rotate into one shared direction, like a steering vector.
+// pointer they rotate into one shared direction, like a steering vector,
+// and grow into arrows.
 (function () {
+  // theme toggle: follows the system until the visitor picks one
+  const root = document.documentElement;
+  const toggle = document.getElementById("theme");
+  const sysDark = window.matchMedia("(prefers-color-scheme: dark)");
+  let saved = null;
+  try { saved = localStorage.getItem("theme"); } catch (e) {}
+  if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+  const isDark = () => (root.dataset.theme ? root.dataset.theme === "dark" : sysDark.matches);
+  const label = () => toggle.setAttribute("aria-label", isDark() ? "Switch to light mode" : "Switch to dark mode");
+  label();
+  toggle.addEventListener("click", () => {
+    root.dataset.theme = isDark() ? "light" : "dark";
+    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+    label();
+    col = colors();
+    kick();
+  });
+
   const canvas = document.getElementById("field");
   const ctx = canvas.getContext("2d");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const STEER = -0.6;   // the shared direction, in radians
   const GAP = 24;       // grid spacing in CSS px
-  const RADIUS = 170;   // pointer influence radius
+  const RADIUS = 230;   // pointer influence radius
 
   let w, h, dpr, cells = [];
   let px = -1e4, py = -1e4;
@@ -58,11 +77,12 @@
     }
   }
 
-  // shortest signed difference between two line orientations (period pi)
+  // shortest signed difference between two directions (period 2pi), so every
+  // arrow ends up pointing the same way, some swinging nearly all the way round
   function dAngle(from, to) {
-    let d = (to - from) % Math.PI;
-    if (d > Math.PI / 2) d -= Math.PI;
-    if (d < -Math.PI / 2) d += Math.PI;
+    const T = Math.PI * 2;
+    let d = ((to - from) % T + T) % T;
+    if (d > Math.PI) d -= T;
     return d;
   }
 
@@ -91,12 +111,13 @@
       const da = dAngle(c.a, target);
       const dt = k - c.t;
       if (Math.abs(da) > 0.002 || Math.abs(dt) > 0.002) moving = true;
-      c.a += da * 0.14;
-      c.t += dt * 0.14;
+      c.a += da * 0.12;
+      c.t += dt * 0.12;
 
-      const len = 5 + c.t * 5;
-      const cx = Math.cos(c.a) * len, cy = Math.sin(c.a) * len;
-      ctx.lineWidth = 1 + c.t * 0.6;
+      const len = 5 + c.t * 8;
+      const ux = Math.cos(c.a), uy = Math.sin(c.a);
+      const cx = ux * len, cy = uy * len;
+      ctx.lineWidth = 1 + c.t * 0.8;
       // ink fades out as the accent fades in; both quieter behind the name
       const inkA = 0.16 * (1 - c.t) * c.q, accA = 0.85 * c.t * (0.4 + 0.6 * c.q);
       for (const [style, alpha] of [[col.ink, inkA], [col.accent, accA]]) {
@@ -106,6 +127,15 @@
         ctx.beginPath();
         ctx.moveTo(c.x - cx, c.y - cy);
         ctx.lineTo(c.x + cx, c.y + cy);
+        // arrowhead grows in as the segment is pulled into the direction
+        if (style === col.accent && c.t > 0.2) {
+          const hl = 2 + (c.t - 0.2) * 6, sp = 0.5;
+          const tx = c.x + cx, ty = c.y + cy;
+          const ca = Math.cos(sp), sa = Math.sin(sp);
+          ctx.moveTo(tx - hl * (ux * ca - uy * sa), ty - hl * (uy * ca + ux * sa));
+          ctx.lineTo(tx, ty);
+          ctx.lineTo(tx - hl * (ux * ca + uy * sa), ty - hl * (uy * ca - ux * sa));
+        }
         ctx.stroke();
       }
     }
@@ -121,7 +151,7 @@
   document.addEventListener("pointerleave", () => { px = py = -1e4; kick(); });
   window.addEventListener("blur", () => { px = py = -1e4; kick(); });
   window.addEventListener("resize", () => { build(); kick(); });
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { col = colors(); kick(); });
+  sysDark.addEventListener("change", () => { label(); col = colors(); kick(); });
 
   build();
   kick();
