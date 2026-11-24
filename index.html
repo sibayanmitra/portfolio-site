@@ -1,38 +1,300 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sibayan Mitra</title>
-  <meta name="description" content="Sibayan Mitra">
-  <meta name="theme-color" content="#ECEEF1" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0D1220" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231B2333'/><path d='M9 21 L23 11' stroke='%238E9BFF' stroke-width='2.4' stroke-linecap='round'/></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sibayan Mitra</title>
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "light" && t !== "dark") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f9f9f7; --ink: #1c1f24; --quiet: #5d6470; --faint: #69707b;
+    --link: #1559b5; --hover: #a65609; --rule: #e3e4e1; --thumb: #fdfdfc;
+    --chip: #fff4e5; --chip-ink: #a3560a; --on-link: #ffffff;
+    --c-faint: #9aa3ad; --c-bar-in: #9db9e2; --c-bar-en: #b9c0c8; --c-box: #f3f4f2;
+    --c-axis: #cfd4da; --c-line: #d6dbe1; --c-layer: #eceff3; --c-layer-on: #cfdcf0;
+    color-scheme: light;
+  }
+  /* night: warm-dark, not pure black, so it is easy on the eyes */
+  :root[data-theme="dark"] {
+    --bg: #15171b; --ink: #e3e5e8; --quiet: #a2a8b1; --faint: #7c838d;
+    --link: #8cb4f5; --hover: #f0a45a; --rule: #2b2f36; --thumb: #1b1e23;
+    --chip: #3a2a17; --chip-ink: #f0a45a; --on-link: #15171b;
+    --c-faint: #6b727c; --c-bar-in: #3c5a8a; --c-bar-en: #4a515b; --c-box: #1f2329;
+    --c-axis: #3a4049; --c-line: #343a42; --c-layer: #23272e; --c-layer-on: #2c3f5f;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    transition: background-color .3s, color .3s;
+    font: 400 17px/1.6 "Source Serif 4", Georgia, serif;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .page { max-width: 680px; margin: 0 auto; padding: 72px 24px 64px; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { color: var(--hover); }
+  a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 2px; }
+  p { margin: 0; }
+
+  /* header: photo beside name and bio, top-aligned */
+  .intro { display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: start; }
+  .photo { width: 140px; height: 140px; display: block; border-radius: 50%; }
+  .name { font-size: 34px; line-height: 1.15; font-weight: 400; letter-spacing: -0.01em; margin: 4px 0 16px; }
+  .intro p + p { margin-top: 12px; }
+  .links { margin-top: 20px !important; color: var(--faint); }
+  .links a { margin: 0 2px; }
+  .links a:first-child { margin-left: 0; }
+
+  h2 { font-size: 20px; font-weight: 600; margin: 72px 0 32px; letter-spacing: -0.005em; }
+
+  /* papers: thumbnail aligned to the top of the title */
+  .paper { position: relative; display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: start; }
+  .paper + .paper { margin-top: 40px; }
+  .paper.feature::before {
+    content: ""; position: absolute; left: -16px; top: 2px; bottom: 2px;
+    width: 2px; border-radius: 1px; background: var(--link);
+  }
+  .papertitle { font-weight: 600; font-size: 17px; line-height: 1.4; color: var(--ink); }
+  a:hover .papertitle { color: var(--hover); }
+  .meta { margin-top: 6px !important; font-size: 15px; line-height: 1.5; color: var(--quiet); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+  .venue { margin-top: 2px !important; font-size: 15px; color: var(--quiet); }
+  .venue em { color: var(--ink); }
+  .desc { margin-top: 10px !important; font-size: 16px; line-height: 1.55; }
+
+  .paper:hover .papertitle { color: var(--hover); }
+  .paper:hover .thumb { border-color: var(--link); }
+
+  .theme {
+    position: fixed; top: 20px; right: 20px; z-index: 2;
+    width: 38px; height: 38px; display: grid; place-items: center;
+    padding: 0; border: 1px solid var(--rule); border-radius: 50%;
+    background: var(--bg); color: var(--quiet); cursor: pointer;
+    transition: color .2s, border-color .2s, background-color .3s;
+  }
+  .theme:hover { color: var(--link); border-color: var(--link); }
+  .theme:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .theme svg { width: 18px; height: 18px; transition: transform .45s cubic-bezier(.3,.7,.2,1); }
+  :root[data-theme="dark"] .theme svg { transform: rotate(180deg); }
+
+  .footer { margin-top: 80px; font-size: 14px; color: var(--faint); }
+
+  /* thumbnails: rest state is the "before"; hover or tap plays the finding */
+  .thumb {
+    width: 140px; height: 105px; display: block; margin-top: 3px;
+    background: var(--thumb); border: 1px solid var(--rule); border-radius: 6px;
+    transition: border-color .25s;
+    cursor: pointer;
+  }
+  .thumb text { font: 10px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--quiet); }
+  .thumb .strong { fill: var(--ink); font-weight: 600; }
+  .thumb * { transition: transform .9s cubic-bezier(.3,.7,.2,1), fill .5s, opacity .5s, stroke .5s; transform-box: view-box; }
+
+  .t1 .bar-in { transform-origin: 0 96px; transform: scaleY(.62); fill: var(--c-bar-in); }
+  .t1 .cue, .t1 .gain { opacity: 0; }
+  .play .t1 .bar-in { transform: scaleY(1); fill: var(--link); }
+  .play .t1 .cue, .play .t1 .gain { opacity: 1; transition-delay: .35s; }
+
+  .t2 .arr { transform-origin: 80px 64px; transform: rotate(var(--a0)); }
+  .t2 .arr line, .t2 .arr path { stroke: var(--hover); }
+  .play .t2 .arr { transform: rotate(var(--a1)); }
+  .play .t2 .arr line, .play .t2 .arr path { stroke: var(--link); }
+  .t2 .lab-retry { opacity: .35; }
+  .play .t2 .lab-retry { opacity: 1; fill: var(--link); }
+  .play .t2 .lab-give { opacity: .35; }
+
+  .t3 .num-copy { transform: translate(0, 0); opacity: 0; }
+  .play .t3 .num-copy { transform: translate(0, 50px); opacity: 1; }
+  .play .t3 .q { opacity: 0; }
+  .t3 .score { opacity: 0; }
+  .play .t3 .score { opacity: 1; transition-delay: .6s; }
+
+  .t4 .layer { fill: var(--c-layer); }
+  .play .t4 .layer { fill: var(--c-layer-on); }
+  .play .t4 .layer.top { fill: var(--link); }
+  .t4 .py { opacity: .3; }
+  .play .t4 .layer:nth-of-type(1) { transition-delay: 0s; }
+  .play .t4 .layer:nth-of-type(2) { transition-delay: .12s; }
+  .play .t4 .layer:nth-of-type(3) { transition-delay: .24s; }
+  .play .t4 .layer:nth-of-type(4) { transition-delay: .36s; }
+  .play .t4 .layer:nth-of-type(5) { transition-delay: .48s; }
+  .play .t4 .layer:nth-of-type(6) { transition-delay: .6s; }
+  .t4 .out { opacity: 0; }
+  .play .t4 .out { opacity: 1; transition-delay: .75s; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16.5px; }
+    .page { padding: 48px 22px 48px; }
+    .intro { grid-template-columns: 1fr; gap: 20px; }
+    .photo { width: 96px; height: 96px; }
+    .name { font-size: 30px; margin-top: 0; }
+    h2 { margin: 56px 0 28px; }
+    .paper { grid-template-columns: 1fr; gap: 14px; }
+    .paper + .paper { margin-top: 44px; }
+    .paper.feature::before { left: -12px; }
+    .thumb { width: 200px; height: 150px; margin-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .thumb *, .theme svg, body { transition: none !important; }
+  }
+</style>
 </head>
 <body>
-  <canvas id="field" aria-hidden="true"></canvas>
+<button class="theme" id="theme" type="button" aria-label="Switch to night mode">
+  <svg viewBox="0 0 20 20" aria-hidden="true">
+    <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M10 2 a8 8 0 0 1 0 16 z" fill="currentColor"/>
+  </svg>
+</button>
+<div class="page">
 
-  <button id="theme" class="theme" type="button" aria-label="Switch theme">
-    <svg viewBox="0 0 20 20" aria-hidden="true">
-      <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/>
-      <path d="M10 2 a8 8 0 0 1 0 16 z" fill="currentColor"/>
+  <header class="intro">
+    <img class="photo" src="sibayan.png" alt="Sibayan Mitra" width="140" height="140">
+    <div>
+      <h1 class="name">Sibayan Mitra</h1>
+      <p>I study what language models represent internally, and when those representations change what the model does.</p>
+      <p>I am a dual-degree student at BITS Pilani (B.E. Electronics &amp; Instrumentation, M.Sc. Chemistry), doing mechanistic interpretability with Prof. Dhruv Kumar.</p>
+      <p class="links">
+        <a href="mailto:f20240862@pilani.bits-pilani.ac.in">Email</a> /
+        <a href="cv.pdf">CV</a> /
+        <a href="https://github.com/sibayanmitra">GitHub</a> /
+        <a href="https://www.linkedin.com/in/sibayan-mitra-078863266">LinkedIn</a>
+      </p>
+    </div>
+  </header>
+
+  <h2>Research</h2>
+
+  <div class="paper feature">
+    <svg class="thumb" viewBox="0 0 160 120" role="img" aria-label="Refusal in Indic languages rising to English level when the model is told it is being tested">
+      <g class="t1">
+        <line style="stroke:var(--c-axis)" x1="22" y1="96" x2="138" y2="96" stroke="#cfd4da"/>
+        <line style="stroke:var(--c-faint)" x1="22" y1="40" x2="138" y2="40" stroke="#9aa3ad" stroke-dasharray="3 3"/>
+        <text x="138" y="35" text-anchor="end">English level</text>
+        <rect style="fill:var(--c-bar-en)" x="38" y="40" width="30" height="56" fill="#b9c0c8"/>
+        <rect class="bar-in" x="92" y="40" width="30" height="56" fill="#9db9e2"/>
+        <text x="53" y="109" text-anchor="middle">English</text>
+        <text x="107" y="109" text-anchor="middle">Indic</text>
+        <text class="gain strong" x="107" y="58" text-anchor="middle" style="fill:var(--on-link)">+14.4</text>
+        <g class="cue">
+          <rect style="fill:var(--chip);stroke:var(--hover)" x="8" y="8" width="66" height="16" rx="8" fill="#fff4e5" stroke="#c2670c"/>
+          <text x="41" y="19" text-anchor="middle" style="fill:var(--chip-ink)">being tested</text>
+        </g>
+      </g>
     </svg>
-  </button>
+    <div>
+      <p><a href="https://arxiv.org/abs/2610.22333"><span class="papertitle">Evaluation Awareness Beyond English: Do LLMs Act Differently When Tested in Indic Languages?</span></a></p>
+      <p class="meta">T. Garg, <strong>S. Mitra</strong>, A. Karanjkar, A. Singh, J. S. Challa, Y. Sinha, S. Mehrotra, D. Kumar, P. Y. Maliya</p>
+      <p class="venue"><em>arXiv preprint</em>, 2026 / <a href="https://arxiv.org/abs/2610.22333">arXiv</a></p>
+      <p class="desc">Every model refused harmful requests more often when told it was being tested. In Indic languages the cue raised refusal by 14.4 points, up to English levels.</p>
+    </div>
+  </div>
 
-  <main class="plate">
-    <h1 class="name">Sibayan Mitra</h1>
-    <nav class="links" aria-label="Elsewhere">
-      <a href="cv.pdf">CV</a>
-      <a href="https://github.com/sibayanmitra">GitHub</a>
-      <a href="https://www.linkedin.com/in/sibayan-mitra-078863266">LinkedIn</a>
-    </nav>
-  </main>
+  <div class="paper">
+    <svg class="thumb" viewBox="0 0 160 120" role="img" aria-label="Arrows swinging from give up to retry when steered">
+      <g class="t2">
+        <text class="lab-give" x="12" y="104">give up</text>
+        <text class="lab-retry strong" x="148" y="22" text-anchor="end">retry</text>
+        <circle style="fill:var(--ink)" cx="80" cy="64" r="2.5" fill="#1d1d1f"/>
+        <g class="arr" style="--a0:172deg;--a1:-22deg"><line x1="80" y1="64" x2="136" y2="64" stroke-width="1.6"/><path d="M130 60 L136 64 L130 68" fill="none" stroke-width="1.6"/></g>
+        <g class="arr" style="--a0:178deg;--a1:-16deg"><line x1="80" y1="64" x2="132" y2="64" stroke-width="1.6"/><path d="M126 60 L132 64 L126 68" fill="none" stroke-width="1.6"/></g>
+        <g class="arr" style="--a0:166deg;--a1:-28deg"><line x1="80" y1="64" x2="128" y2="64" stroke-width="1.6"/><path d="M122 60 L128 64 L122 68" fill="none" stroke-width="1.6"/></g>
+        <g class="arr" style="--a0:184deg;--a1:-10deg"><line x1="80" y1="64" x2="130" y2="64" stroke-width="1.6"/><path d="M124 60 L130 64 L124 68" fill="none" stroke-width="1.6"/></g>
+        <g class="arr" style="--a0:160deg;--a1:-34deg"><line x1="80" y1="64" x2="134" y2="64" stroke-width="1.6"/><path d="M128 60 L134 64 L128 68" fill="none" stroke-width="1.6"/></g>
+      </g>
+    </svg>
+    <div>
+      <p><a href="https://github.com/sibayanmitra/agentic-tool-error-steering"><span class="papertitle">Tool-Error-Induced Next-Action Direction in Agentic LLMs</span></a></p>
+      <p class="meta"><strong>S. Mitra</strong>, with Claude Opus 4.7 and Sonnet 4.6 as AI co-authors</p>
+      <p class="venue"><em>CAISc</em>, 2026 / <a href="https://github.com/sibayanmitra/agentic-tool-error-steering">code</a></p>
+      <p class="desc">After a tool error, one direction predicts whether an agent retries, changes its arguments or gives up. Steering along it turns 94–100% of give-ups into retries.</p>
+    </div>
+  </div>
 
-  <script src="app.js"></script>
+  <div class="paper">
+    <svg class="thumb" viewBox="0 0 160 120" role="img" aria-label="A number in the prompt being copied into the model's answer">
+      <g class="t3">
+        <rect style="fill:var(--c-box);stroke:var(--c-line)" x="14" y="12" width="132" height="34" rx="4" fill="#f4f6f8" stroke="#d6dbe1"/>
+        <text x="22" y="26">prompt</text>
+        <text x="22" y="39" class="strong" style="fill:var(--quiet);font-weight:400">…estimate it.</text>
+        <rect style="fill:var(--chip)" x="96" y="28" width="40" height="14" rx="3" fill="#fff4e5"/>
+        <text x="116" y="39" text-anchor="middle" style="fill:var(--chip-ink);font-weight:700">4,200</text>
+        <rect style="fill:var(--thumb);stroke:var(--c-line)" x="14" y="62" width="132" height="34" rx="4" fill="#fff" stroke="#d6dbe1"/>
+        <text x="22" y="76">answer</text>
+        <text class="q" x="116" y="89" text-anchor="middle" style="fill:var(--c-faint)">?</text>
+        <text class="num-copy" x="116" y="39" text-anchor="middle" style="fill:var(--link);font-weight:700">4,200</text>
+        <text class="score strong" x="146" y="112" text-anchor="end">19 / 20 copied</text>
+      </g>
+    </svg>
+    <div>
+      <p><a href="https://github.com/sibayanmitra/value-leakage-forensics"><span class="papertitle">The Number, Not the Values</span></a></p>
+      <p class="meta"><strong>S. Mitra</strong></p>
+      <p class="venue"><em>Project</em>, 2026 / <a href="https://github.com/sibayanmitra/value-leakage-forensics">code</a></p>
+      <p class="desc">A re-test of the claim that a model's values bias its numeric estimates. It was mostly copying the number in the prompt: 19 of 20 answers when the question was broad, 0 of 20 when narrow.</p>
+    </div>
+  </div>
+
+  <div class="paper">
+    <svg class="thumb" viewBox="0 0 160 120" role="img" aria-label="Logit lens layers lighting up without passing through Python">
+      <g class="t4">
+        <rect class="layer" x="20" y="92" width="80" height="11" rx="2"/>
+        <rect class="layer" x="20" y="78" width="80" height="11" rx="2"/>
+        <rect class="layer" x="20" y="64" width="80" height="11" rx="2"/>
+        <rect class="layer" x="20" y="50" width="80" height="11" rx="2"/>
+        <rect class="layer" x="20" y="36" width="80" height="11" rx="2"/>
+        <rect class="layer top" x="20" y="22" width="80" height="11" rx="2"/>
+        <text x="60" y="15" text-anchor="middle">layers</text>
+        <g class="py">
+          <rect style="stroke:var(--c-faint)" x="110" y="56" width="38" height="16" rx="3" fill="none" stroke="#9aa3ad" stroke-dasharray="3 2"/>
+          <text x="129" y="67" text-anchor="middle">def?</text>
+        </g>
+        <text class="out strong" x="129" y="31" text-anchor="middle" style="fill:var(--link)">function</text>
+      </g>
+    </svg>
+    <div>
+      <p><a href="https://github.com/sibayanmitra/code-llm-thinks-python"><span class="papertitle">Do Code LLMs Think in Python?</span></a></p>
+      <p class="meta"><strong>S. Mitra</strong></p>
+      <p class="venue"><em>Project</em>, 2026 / <a href="https://github.com/sibayanmitra/code-llm-thinks-python">code</a></p>
+      <p class="desc">Logit lens and probes on four code models, asking whether they route through Python the way multilingual models route through English. No clear evidence that they do.</p>
+    </div>
+  </div>
+
+  <p class="footer">Website template from <a href="https://jonbarron.info/">Jon Barron</a>.</p>
+</div>
+
+<script>
+  // night mode toggle
+  (function () {
+    const root = document.documentElement, btn = document.getElementById("theme");
+    const label = () => btn.setAttribute("aria-label", root.dataset.theme === "dark" ? "Switch to day mode" : "Switch to night mode");
+    label();
+    btn.addEventListener("click", () => {
+      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      label();
+    });
+  })();
+  // hover plays a thumbnail on desktop; tap toggles it on touch screens
+  document.querySelectorAll(".paper").forEach((p) => {
+    const t = p.querySelector(".thumb");
+    p.addEventListener("mouseenter", () => t.classList.add("play"));
+    p.addEventListener("mouseleave", () => t.classList.remove("play"));
+    t.addEventListener("click", () => t.classList.toggle("play"));
+  });
+</script>
 </body>
 </html>
